@@ -122,3 +122,53 @@ class DiscountedRewardsScene(Scene):
         box.set_stroke(width=2)
         self.wait(2)
         self.play(FadeOut(VGroup(title, now_box, now_label, rewards, formula)))
+
+class ValueGuidesScene(Scene):
+    def construct(self):
+        title = Text("Value Leads the Way", font_size=50, color=YELLOW).to_edge(UP)
+        self.play(Write(title), run_time=1.5)
+
+        # Create correct AIMA 3x4 Grid World
+        grid = VGroup()
+        values = {
+            0: "-0.04", 1: "-0.04", 2: "-0.04", 3: "+1.0",
+            4: "-0.04", 5: "-0.04", 6: "-0.04", 7: "-1.0",
+            8: "START", 9: "-0.04", 10: "-0.04", 11: "-0.04"
+        }
+
+        positions = []
+        for i in range(3):  # 3 rows
+            for j in range(4):  # 4 columns
+                idx = (2 - i) * 4 + j
+                pos = RIGHT * j + DOWN * (2 - i)
+                square = Square(side_length=1.2, stroke_width=2).move_to(pos)
+                label_text = values.get(idx, "-0.04")
+                label = Text(label_text, font_size=22).move_to(square.get_center())
+                if label_text == "+1.0":
+                    label.set_color(GOLD)
+                cell = VGroup(square, label)
+                grid.add(cell)
+                positions.append(pos)
+
+        grid.move_to(ORIGIN)
+        self.play(Create(grid), run_time=2)
+
+        # Agent starts at START cell (8)
+        start_idx = 0
+        agent = Dot(color=RED).scale(1.2).move_to(grid[start_idx][0].get_center())
+
+        self.play(FadeIn(agent))
+
+        path_indices = [0,1,2,6,10,11]  # START to +1.0
+        for idx in path_indices:
+            self.play(agent.animate.move_to(grid[idx][0].get_center()), run_time=0.6)
+
+        # Bellman Equation
+        bellman_eq = MathTex(
+            r"v_\pi(s) = \sum_a \pi(a|s) \sum_{s',r} p(s',r|s,a)[r + \gamma v_\pi(s')]",
+            font_size=34
+        ).next_to(grid, DOWN, buff=1)
+        self.play(Write(bellman_eq))
+        self.wait(2)
+        elements = VGroup(title, *grid, agent, bellman_eq)
+        self.play(FadeOut(elements))
