@@ -15,3 +15,4 @@ media/videos/main/1080p60/partial*/
 media/videos/main/480p15/partial*/
 
 .python-ver*
+.DS_Store
