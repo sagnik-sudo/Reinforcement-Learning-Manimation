@@ -4,72 +4,73 @@ class IntroRLScene(Scene):
     def construct(self):
         # Title intro
         title = Text("Reinforcement Learning: 101", font_size=60, color=YELLOW)
-        self.play(Write(title), run_time=1.2)
+        self.play(Write(title), run_time=1.0)
         self.wait(0.5)
         presenter = Text("Presented by Sagnik Das", font_size=36, color=BLUE).next_to(title, DOWN, buff=0.5)
-        self.play(Write(presenter), run_time=1)
-        self.wait(1)
-        self.play(FadeOut(VGroup(title, presenter)))
-        # Setup grid with thin lines
+        self.play(Write(presenter), run_time=0.9)
+        self.wait(0.9)
+        self.play(FadeOut(VGroup(title, presenter)), run_time=0.9)
+
+        # Setup grid
         grid = VGroup()
         for x in range(3):
             for y in range(3):
                 square = Square(side_length=1.2, stroke_width=2).move_to(RIGHT*x + DOWN*y)
                 grid.add(square)
         grid.move_to(ORIGIN)
-        self.play(Create(grid), run_time=1.5)
+        self.play(Create(grid), run_time=1.2)
 
         # Agent & goal
-        agent = Dot(color=RED).move_to(grid[6].get_center())  # bottom-left
-        goal_flag = SVGMobject("flag.svg").scale(0.2).set_color(GOLD).move_to(grid[2].get_center())  # top-right
+        agent = Dot(color=RED).move_to(grid[6].get_center())
+        goal_flag = SVGMobject("flag.svg").scale(0.2).set_color(GOLD).move_to(grid[2].get_center())
+        self.play(FadeIn(agent), FadeIn(goal_flag), run_time=0.9)
 
-        self.play(FadeIn(agent), FadeIn(goal_flag), run_time=1)
-
-        # First (wrong) path
+        # Wrong path
         wrong_path = [grid[6], grid[3]]
         for cell in wrong_path:
-            self.play(agent.animate.move_to(cell.get_center()), run_time=0.3)
+            self.play(agent.animate.move_to(cell.get_center()), run_time=0.26)
 
-        # Visual indication: negative reward (wall or trap)
         penalty_cell = grid[4]
         penalty_label = Text("-1", font_size=30, color=RED).move_to(penalty_cell.get_center())
-        self.play(FadeIn(penalty_label), run_time=0.4)
+        self.play(FadeIn(penalty_label), run_time=0.35)
 
-        self.play(agent.animate.move_to(grid[4].get_center()), run_time=0.3)
-        self.play(Flash(agent), run_time=0.3)
+        self.play(agent.animate.move_to(grid[4].get_center()), run_time=0.26)
+        self.play(Flash(agent), run_time=0.26)
         wrong_icon = SVGMobject("cross.svg").scale(0.2).move_to(grid.get_corner(UR) + RIGHT * 0.5)
-        self.play(FadeIn(wrong_icon), run_time=0.3)
+        self.play(FadeIn(wrong_icon), run_time=0.26)
         self.wait(0.3)
-        self.play(FadeOut(wrong_icon), FadeOut(penalty_label), run_time=0.3)
+        self.play(FadeOut(wrong_icon), FadeOut(penalty_label), run_time=0.26)
         self.wait(0.5)
 
-        # Reset agent
-        self.play(agent.animate.move_to(grid[6].get_center()), run_time=0.3)
+        # Reset
+        self.play(agent.animate.move_to(grid[6].get_center()), run_time=0.26)
 
         # Correct path
         correct_path = [grid[6], grid[7], grid[8], grid[5], grid[2]]
         for cell in correct_path:
-            self.play(agent.animate.move_to(cell.get_center()), run_time=0.3)
-        self.play(Indicate(goal_flag, scale_factor=1.5), run_time=0.3)
+            self.play(agent.animate.move_to(cell.get_center()), run_time=0.26)
+        self.play(Indicate(goal_flag, scale_factor=1.5), run_time=0.26)
+
         success_icon = SVGMobject("accept.svg").scale(0.4)
         success_icon.move_to(grid.get_corner(UR) + RIGHT * 0.8 + DOWN * 0.2)
-        self.play(FadeIn(success_icon), run_time=0.4)
+        self.play(FadeIn(success_icon), run_time=0.35)
         self.wait(0.3)
-        self.play(FadeOut(success_icon), run_time=0.4)
+        self.play(FadeOut(success_icon), run_time=0.35)
 
-        # Add subtitle below grid
+        # Subtitle
         subtitle = Text("Learning by Trial and Error", font_size=40, color=BLUE)
         subtitle.next_to(grid, DOWN, buff=0.8)
-        self.play(Write(subtitle), run_time=1)
+        self.play(Write(subtitle), run_time=0.9)
+        self.wait(0.9)
+        self.play(FadeOut(VGroup(grid, agent, goal_flag, subtitle)), run_time=0.9)
 
-        self.wait(1)
-        self.play(FadeOut(VGroup(grid, agent, goal_flag, subtitle)))
+        self.wait(0.8)
 
 class MDPPolicyScene(Scene):
     def construct(self):
         # Title
         title = Text("Markov Decision Process & Policy", font_size=50, color=YELLOW).to_edge(UP)
-        self.play(Write(title), run_time=0.6)
+        self.play(Write(title), run_time=1.0)
 
         # MDP Elements
         state = Circle(color=BLUE).shift(LEFT*3)
@@ -83,23 +84,24 @@ class MDPPolicyScene(Scene):
 
         reward = Text("Reward", font_size=30, color=GOLD).next_to(next_state, UP)
 
-        self.play(Create(state), Write(state_label), run_time=0.6)
-        self.play(Create(next_state), Write(next_state_label), run_time=0.6)
-        self.play(GrowArrow(action), Write(action_label), run_time=0.6)
-        self.play(Write(reward), run_time=0.6)
+        self.play(Create(state), Write(state_label), run_time=0.9)
+        self.play(Create(next_state), Write(next_state_label), run_time=0.9)
+        self.play(GrowArrow(action), Write(action_label), run_time=0.9)
+        self.play(Write(reward), run_time=0.8)
 
         # Policy formula
         policy_box = Rectangle(width=6, height=1.2, color=WHITE).shift(DOWN*3)
         policy_text = Text("Policy: π(s) → a", font_size=34).move_to(policy_box.get_center())
-        self.play(Create(policy_box), Write(policy_text), run_time=0.6)
+        self.play(Create(policy_box), Write(policy_text), run_time=1.0)
 
         # Policy explanation
         def_box = Rectangle(width=8, height=1.8, color=WHITE).next_to(policy_box, DOWN, buff=0.5)
         def_text = Text("A policy defines the agent's way of behaving at a given state.",
                         font_size=30, line_spacing=0.8).move_to(def_box.get_center())
-        self.play(Create(def_box), Write(def_text), run_time=0.6)
+        self.play(Create(def_box), Write(def_text), run_time=1.0)
 
-        self.wait(0.5)
+        self.wait(1.2)
+        self.wait(0.3)
         self.play(FadeOut(VGroup(
             title, state, state_label, action, action_label,
             next_state, next_state_label, reward,
@@ -110,13 +112,13 @@ class DiscountedRewardsScene(Scene):
     def construct(self):
         # Title
         title = Text("Discounted Rewards (γ = 0.8)", font_size=48, color=YELLOW).to_edge(UP)
-        self.play(Write(title), run_time=0.8)
+        self.play(Write(title), run_time=1.2)
 
         # "Now" box
         now_box = Square().set_color(BLUE).move_to(LEFT*4)
         now_label = Text("Now", font_size=30).next_to(now_box, DOWN)
 
-        self.play(FadeIn(now_box), Write(now_label), run_time=0.6)
+        self.play(FadeIn(now_box), Write(now_label), run_time=0.9)
 
         # Future rewards with γ=0.8
         gamma = 0.8
@@ -129,22 +131,23 @@ class DiscountedRewardsScene(Scene):
             rewards.add(VGroup(box, label))
 
         for reward_group in rewards:
-            self.play(FadeIn(reward_group), run_time=0.2)
+            self.play(FadeIn(reward_group), run_time=0.35)
 
         # Show discounted return formula below
         formula = MathTex(
             r"R(s) = r_1 + \gamma r_2 + \gamma^2 r_3 + \gamma^3 r_4 + \gamma^4 r_5 + \cdots",
             font_size=36
         ).move_to(DOWN*2)
-        self.play(Write(formula), run_time=1)
+        self.play(Write(formula), run_time=1.5)
         now_box.set_stroke(width=2)
-        self.wait(1)
+        self.wait(1.8)
+        self.wait(0.6)
         self.play(FadeOut(VGroup(title, now_box, now_label, rewards, formula)))
 
 class ValueGuidesScene(Scene):
     def construct(self):
         title = Text("Value Leads the Way", font_size=50, color=YELLOW).to_edge(UP)
-        self.play(Write(title), run_time=1)
+        self.play(Write(title), run_time=1.2)
 
         # Create correct AIMA 3x4 Grid World
         grid = VGroup()
@@ -169,23 +172,23 @@ class ValueGuidesScene(Scene):
                 positions.append(pos)
 
         grid.move_to(ORIGIN)
-        self.play(Create(grid), run_time=1.2)
+        self.play(Create(grid), run_time=1.4)
 
         # Agent starts at START cell (8)
         start_idx = 0
         agent = Dot(color=RED).scale(1.2).move_to(grid[start_idx][0].get_center())
 
-        self.play(FadeIn(agent))
+        self.play(FadeIn(agent), run_time=0.6)
 
         path_indices = [0,1,2,6,10,11]  # START to +1.0
         for idx in path_indices:
-            self.play(agent.animate.move_to(grid[idx][0].get_center()), run_time=0.4)
+            self.play(agent.animate.move_to(grid[idx][0].get_center()), run_time=0.5)
 
         bellman_eq = MathTex(
             r"V^*(s) = \max_{a \epsilon A} \sum_{s' \epsilon S} T(s, a, s') \left[ R(s, a, s') + \gamma V^*(s') \right]",
             font_size=34
         ).next_to(grid, DOWN, buff=1)
-        self.play(Write(bellman_eq), run_time=1)
+        self.play(Write(bellman_eq), run_time=1.2)
         self.wait(1)
         elements = VGroup(title, *grid, agent, bellman_eq)
         self.play(FadeOut(elements))
@@ -238,7 +241,7 @@ class TemporalDifferenceScene(Scene):
         summary = Text("TD(0): Update after every step using next state's value",
                        font_size=30, color=BLUE).next_to(tiles, DOWN, buff=0.8)
         self.play(Write(summary), run_time=0.8)
-        self.wait(1)
+        self.wait(1.5)
         self.play(FadeOut(VGroup(title, tiles, agent, summary)), run_time=0.5)
 
 class SarsaVsQLearningScene(Scene):
@@ -416,3 +419,5 @@ class OutroScene(Scene):
         self.wait(1.5)
 
         self.play(FadeOut(VGroup(title, ref, thanks)), run_time=0.8)
+        self.wait(6.2)
+        self.wait(1.1)

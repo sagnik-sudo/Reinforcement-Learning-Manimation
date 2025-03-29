@@ -8,6 +8,10 @@ wheels/
 
 # Virtual environments
 .venv
-media
+media/images
+media/Tex
+media/texts
+media/videos/main/1080p60/partial*/
+media/videos/main/480p15/partial*/
 
 .python-ver*
