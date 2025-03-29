@@ -3,11 +3,13 @@ from manim import *
 class IntroRLScene(Scene):
     def construct(self):
         # Title intro
-        title = Text("Introduction to Reinforcement Learning", font_size=60, color=YELLOW)
+        title = Text("Reinforcement Learning: 101", font_size=60, color=YELLOW)
         self.play(Write(title), run_time=1.2)
         self.wait(0.5)
-        self.play(FadeOut(title))
-
+        presenter = Text("Presented by Sagnik Das", font_size=36, color=BLUE).next_to(title, DOWN, buff=0.5)
+        self.play(Write(presenter), run_time=1)
+        self.wait(1)
+        self.play(FadeOut(VGroup(title, presenter)))
         # Setup grid with thin lines
         grid = VGroup()
         for x in range(3):
@@ -24,10 +26,21 @@ class IntroRLScene(Scene):
         self.play(FadeIn(agent), FadeIn(goal_flag), run_time=1)
 
         # First (wrong) path
-        wrong_path = [grid[6], grid[3], grid[4]]
+        wrong_path = [grid[6], grid[3]]
         for cell in wrong_path:
             self.play(agent.animate.move_to(cell.get_center()), run_time=0.3)
+
+        # Visual indication: negative reward (wall or trap)
+        penalty_cell = grid[4]
+        penalty_label = Text("-1", font_size=30, color=RED).move_to(penalty_cell.get_center())
+        self.play(FadeIn(penalty_label), run_time=0.4)
+
+        self.play(agent.animate.move_to(grid[4].get_center()), run_time=0.3)
         self.play(Flash(agent), run_time=0.3)
+        wrong_icon = SVGMobject("cross.svg").scale(0.2).move_to(grid.get_corner(UR) + RIGHT * 0.5)
+        self.play(FadeIn(wrong_icon), run_time=0.3)
+        self.wait(0.3)
+        self.play(FadeOut(wrong_icon), FadeOut(penalty_label), run_time=0.3)
         self.wait(0.5)
 
         # Reset agent
@@ -38,6 +51,11 @@ class IntroRLScene(Scene):
         for cell in correct_path:
             self.play(agent.animate.move_to(cell.get_center()), run_time=0.3)
         self.play(Indicate(goal_flag, scale_factor=1.5), run_time=0.3)
+        success_icon = SVGMobject("accept.svg").scale(0.4)
+        success_icon.move_to(grid.get_corner(UR) + RIGHT * 0.8 + DOWN * 0.2)
+        self.play(FadeIn(success_icon), run_time=0.4)
+        self.wait(0.3)
+        self.play(FadeOut(success_icon), run_time=0.4)
 
         # Add subtitle below grid
         subtitle = Text("Learning by Trial and Error", font_size=40, color=BLUE)
