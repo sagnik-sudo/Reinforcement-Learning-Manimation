@@ -98,10 +98,9 @@ class MDPPolicyScene(Scene):
         def_box = Rectangle(width=8, height=1.8, color=WHITE).next_to(policy_box, DOWN, buff=0.5)
         def_text = Text("A policy defines the agent's way of behaving at a given state.",
                         font_size=30, line_spacing=0.8).move_to(def_box.get_center())
-        self.play(Create(def_box), Write(def_text), run_time=1.0)
+        self.play(Create(def_box), Write(def_text), run_time=1.2)
 
-        self.wait(1.2)
-        self.wait(0.3)
+        self.wait(2.5)
         self.play(FadeOut(VGroup(
             title, state, state_label, action, action_label,
             next_state, next_state_label, reward,
@@ -140,8 +139,7 @@ class DiscountedRewardsScene(Scene):
         ).move_to(DOWN*2)
         self.play(Write(formula), run_time=1.5)
         now_box.set_stroke(width=2)
-        self.wait(1.8)
-        self.wait(0.6)
+        self.wait(2.8)
         self.play(FadeOut(VGroup(title, now_box, now_label, rewards, formula)))
 
 class ValueGuidesScene(Scene):
@@ -188,8 +186,8 @@ class ValueGuidesScene(Scene):
             r"V^*(s) = \max_{a \epsilon A} \sum_{s' \epsilon S} T(s, a, s') \left[ R(s, a, s') + \gamma V^*(s') \right]",
             font_size=34
         ).next_to(grid, DOWN, buff=1)
-        self.play(Write(bellman_eq), run_time=1.2)
-        self.wait(1)
+        self.play(Write(bellman_eq), run_time=1.5)
+        self.wait(2)
         elements = VGroup(title, *grid, agent, bellman_eq)
         self.play(FadeOut(elements))
 
@@ -197,7 +195,7 @@ class TemporalDifferenceScene(Scene):
     def construct(self):
         # Title
         title = Text("Temporal-Difference Learning", font_size=48, color=YELLOW).to_edge(UP)
-        self.play(Write(title), run_time=0.8)
+        self.play(Write(title), run_time=1.2)
 
         # Setup tiles
         tiles = VGroup()
@@ -209,11 +207,11 @@ class TemporalDifferenceScene(Scene):
             tiles.add(VGroup(tile, label, value))
 
         tiles.move_to(ORIGIN)
-        self.play(Create(tiles), run_time=1)
+        self.play(Create(tiles), run_time=1.3)
 
         # Agent dot
         agent = Dot(color=RED).scale(1.2).move_to(tiles[0][0].get_center())
-        self.play(FadeIn(agent), run_time=0.3)
+        self.play(FadeIn(agent), run_time=0.5)
 
         # Step 1: S0 -> S1
         reward1 = Text("r = +1", font_size=28, color=GOLD).next_to(tiles[1][0], UP, buff=0.3)
@@ -221,10 +219,10 @@ class TemporalDifferenceScene(Scene):
             r"V(S_0) \leftarrow 0.5 + 0.1 \cdot [1 + 0.9 \cdot 0.6 - 0.5] = 0.59",
             font_size=28
         ).to_edge(DOWN)
-        self.play(agent.animate.move_to(tiles[1][0].get_center()), run_time=0.4)
-        self.play(Write(reward1), Write(update_eq1), run_time=0.8)
-        self.wait(0.2)
-        self.play(FadeOut(reward1), FadeOut(update_eq1), run_time=0.3)
+        self.play(agent.animate.move_to(tiles[1][0].get_center()), run_time=0.6)
+        self.play(Write(reward1), Write(update_eq1), run_time=1.0)
+        self.wait(0.4)
+        self.play(FadeOut(reward1), FadeOut(update_eq1), run_time=0.5)
 
         # Step 2: S1 -> S2
         reward2 = Text("r = 0", font_size=28, color=GOLD).next_to(tiles[2][0], UP, buff=0.3)
@@ -232,22 +230,22 @@ class TemporalDifferenceScene(Scene):
             r"V(S_1) \leftarrow 0.6 + 0.1 \cdot [0 + 0.9 \cdot 0.2 - 0.6] = 0.57",
             font_size=28
         ).to_edge(DOWN)
-        self.play(agent.animate.move_to(tiles[2][0].get_center()), run_time=0.4)
-        self.play(Write(reward2), Write(update_eq2), run_time=0.8)
-        self.wait(0.2)
-        self.play(FadeOut(reward2), FadeOut(update_eq2), run_time=0.3)
+        self.play(agent.animate.move_to(tiles[2][0].get_center()), run_time=0.6)
+        self.play(Write(reward2), Write(update_eq2), run_time=1.0)
+        self.wait(0.4)
+        self.play(FadeOut(reward2), FadeOut(update_eq2), run_time=0.5)
 
         # Summary
         summary = Text("TD(0): Update after every step using next state's value",
                        font_size=30, color=BLUE).next_to(tiles, DOWN, buff=0.8)
-        self.play(Write(summary), run_time=0.8)
-        self.wait(1.5)
-        self.play(FadeOut(VGroup(title, tiles, agent, summary)), run_time=0.5)
+        self.play(Write(summary), run_time=1.2)
+        self.wait(1.8)
+        self.play(FadeOut(VGroup(title, tiles, agent, summary)), run_time=0.6)
 
 class SarsaVsQLearningScene(Scene):
     def construct(self):
         title = Text("Sarsa vs Q-Learning", font_size=48, color=YELLOW).to_edge(UP)
-        self.play(Write(title), run_time=0.8)
+        self.play(Write(title), run_time=1.2)
 
         # Define two side-by-side mini-grids
         sarsa_grid = VGroup()
@@ -258,69 +256,64 @@ class SarsaVsQLearningScene(Scene):
             sarsa_grid.add(s_tile)
             q_grid.add(q_tile)
 
-        self.play(Create(sarsa_grid), Create(q_grid), run_time=0.6)
+        self.play(Create(sarsa_grid), Create(q_grid), run_time=0.9)
 
         # Add labels
         sarsa_label = Text("Sarsa (On-policy)", font_size=28, color=BLUE).next_to(sarsa_grid, UP)
         q_label = Text("Q-Learning (Off-policy)", font_size=28, color=RED).next_to(q_grid, UP)
-        self.play(Write(sarsa_label, run_time=0.6), Write(q_label, run_time=0.6))
+        self.play(Write(sarsa_label, run_time=0.9), Write(q_label, run_time=0.9))
 
         # Add agents
         agent_s = Dot(color=BLUE).scale(1.2).move_to(sarsa_grid[0].get_center())
         agent_q = Dot(color=RED).scale(1.2).move_to(q_grid[0].get_center())
-        self.play(FadeIn(agent_s), FadeIn(agent_q), run_time=0.6)
+        self.play(FadeIn(agent_s), FadeIn(agent_q), run_time=0.8)
 
         # Sarsa path (actual behavior)
-        self.play(agent_s.animate.move_to(sarsa_grid[1].get_center()), run_time=0.4)
+        self.play(agent_s.animate.move_to(sarsa_grid[1].get_center()), run_time=0.6)
         update_s = MathTex(
             r"Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma Q(s',a') - Q(s,a)]",
             color=BLUE
-        ).scale(0.7).next_to(sarsa_grid, DOWN, buff=0.3)
-        update_s.align_to(sarsa_grid, LEFT)
+        ).scale(0.8).shift(LEFT * 3 + DOWN * 1.5)
 
-        a_label = Text("Follows taken action a'", font_size=24, color=BLUE).next_to(update_s, DOWN, buff=0.2)
+        a_label = Text("Follows taken action a'", font_size=24, color=BLUE).next_to(sarsa_grid, DOWN, buff=0.5)
 
         # Q-Learning path (greedy lookahead)
-        self.play(agent_q.animate.move_to(q_grid[1].get_center()), run_time=0.4)
+        self.play(agent_q.animate.move_to(q_grid[1].get_center()), run_time=0.6)
         update_q = MathTex(
             r"Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma \max_{a'} Q(s',a') - Q(s,a)]",
             color=RED
-        ).scale(0.7).next_to(q_grid, DOWN, buff=0.3)
-        update_q.align_to(q_grid, RIGHT)
+        ).scale(0.8).shift(RIGHT * 3 + DOWN * 1.5)
 
-        q_label2 = Text("Assumes best future action", font_size=24, color=RED).next_to(update_q, DOWN, buff=0.2)
+        q_label2 = Text("Assumes best future action", font_size=24, color=RED).next_to(q_grid, DOWN, buff=0.5)
 
         eq_group = VGroup(update_s, update_q).arrange(DOWN, buff=0.3).move_to(DOWN * 2.5)
 
-        self.play(Write(eq_group, run_time=1), Write(a_label, run_time=0.6), Write(q_label2, run_time=0.6))
-        self.wait(1.5)
+        self.play(Write(eq_group, run_time=1.2), Write(a_label, run_time=0.9), Write(q_label2, run_time=0.9))
+        self.wait(1.8)
 
-        # Highlight difference visually
-        arrow1 = Arrow(update_s.get_bottom(), a_label.get_top(), buff=0.1, color=BLUE)
-        arrow2 = Arrow(update_q.get_bottom(), q_label2.get_top(), buff=0.1, color=RED)
-        self.play(GrowArrow(arrow1), GrowArrow(arrow2))
+        # Highlight difference visually (arrows removed)
 
         # Final summary
         summary = Text("Sarsa: Learns from experience  |  Q-Learning: Learns from imagined optimal future",
                        font_size=28, color=WHITE).to_edge(DOWN)
-        self.play(Write(summary), run_time=0.6)
+        self.play(Write(summary), run_time=0.9)
 
-        self.wait(1)
+        self.wait(1.4)
         self.play(FadeOut(VGroup(
             title, sarsa_grid, q_grid, agent_s, agent_q,
-            update_s, update_q, a_label, q_label2, sarsa_label, q_label, arrow1, arrow2, summary
-        )), run_time=1)
+            update_s, update_q, a_label, q_label2, sarsa_label, q_label, summary
+        )), run_time=1.2)
 
 class DeepQScene(Scene):
     def construct(self):
         # Title
         title = Text("Deep Q-Learning", font_size=50, color=YELLOW).to_edge(UP)
-        self.play(Write(title), run_time=0.8)
+        self.play(Write(title), run_time=1.2)
 
         # Agent sees a frame (image/grid)
         frame = Square(side_length=1.2, color=BLUE).shift(LEFT * 4)
         frame_label = Text("State (image)", font_size=24).next_to(frame, DOWN)
-        self.play(Create(frame), Write(frame_label), run_time=0.8)
+        self.play(Create(frame), Write(frame_label), run_time=1.1)
 
         # Neural net boxes
         layers = VGroup()
@@ -329,7 +322,7 @@ class DeepQScene(Scene):
             layers.add(layer)
         net = VGroup(*layers).move_to(RIGHT * 0.5)
 
-        self.play(TransformFromCopy(frame, layers[0]), Create(layers[1:]), run_time=1.2)
+        self.play(TransformFromCopy(frame, layers[0]), Create(layers[1:]), run_time=1.5)
 
         # Output Q values
         q_vals = VGroup(
@@ -337,14 +330,14 @@ class DeepQScene(Scene):
             Text("Q(Right)", font_size=24),
             Text("Q(Jump)", font_size=24)
         ).arrange(DOWN, buff=0.2).next_to(layers[-1], RIGHT, buff=0.6)
-        self.play(Write(q_vals), run_time=1)
+        self.play(Write(q_vals), run_time=1.2)
 
         # Show loss function
         loss_eq = MathTex(
             r"L(\theta) = \left(r + \gamma \max_{a'} Q(s', a') - Q(s, a)\right)^2",
             font_size=32
         ).next_to(q_vals, DOWN, buff=0.8)
-        self.play(Write(loss_eq), run_time=1.2)
+        self.play(Write(loss_eq), run_time=1.4)
 
         # Replay buffer animation
         memory = Rectangle(width=2, height=1, color=GREEN).to_corner(DOWN + LEFT)
@@ -352,28 +345,28 @@ class DeepQScene(Scene):
         batch = Rectangle(width=1, height=0.4, color=GOLD).next_to(memory, RIGHT, buff=0.5)
         batch_label = Text("Sample Batch", font_size=20).next_to(batch, UP, buff=0.1)
 
-        self.play(Create(memory), Write(mem_label), run_time=0.6)
-        self.play(FadeIn(batch), Write(batch_label), run_time=0.6)
+        self.play(Create(memory), Write(mem_label), run_time=0.9)
+        self.play(FadeIn(batch), Write(batch_label), run_time=0.9)
 
         # Final line
         summary = Text("Scaling RL with pixels & neural nets", font_size=28, color=BLUE).to_edge(DOWN)
-        self.play(Write(summary), run_time=1.2)
-        self.wait(0.6)
+        self.play(Write(summary), run_time=1.4)
+        self.wait(1.5)
 
         self.play(FadeOut(VGroup(
             title, frame, frame_label, layers, q_vals,
             loss_eq, memory, mem_label, batch, batch_label, summary
-        )), run_time=0.6)
+        )), run_time=0.9)
 
 class PolicyGradientScene(Scene):
     def construct(self):
         title = Text("Policy Gradient Methods", font_size=50, color=YELLOW).to_edge(UP)
-        self.play(Write(title), run_time=0.8)
+        self.play(Write(title), run_time=1.2)
 
         # Policy network visual
         state = Square(color=BLUE).scale(1).shift(LEFT * 4)
         state_label = Text("State s", font_size=24).next_to(state, DOWN)
-        self.play(FadeIn(state), Write(state_label), run_time=0.6)
+        self.play(FadeIn(state), Write(state_label), run_time=0.9)
 
         # Policy net arrows to actions
         action_probs = VGroup(
@@ -384,21 +377,21 @@ class PolicyGradientScene(Scene):
 
         for i, action in enumerate(action_probs):
             arrow = Arrow(state.get_right(), action.get_left(), buff=0.1)
-            self.play(GrowArrow(arrow), Write(action), run_time=0.3)
+            self.play(GrowArrow(arrow), Write(action), run_time=0.6)
 
         # REINFORCE formula
         reinforce = MathTex(
             r"\theta \leftarrow \theta + \alpha G_t \nabla \log \pi(a|s, \theta)",
             font_size=32
         ).to_edge(DOWN)
-        self.play(Write(reinforce), run_time=1)
+        self.play(Write(reinforce), run_time=1.4)
 
         # Summary
         summary = Text("REINFORCE: Learn policy directly from returns", font_size=28, color=BLUE).next_to(reinforce, UP, buff=0.4)
-        self.play(Write(summary), run_time=0.8)
+        self.play(Write(summary), run_time=1.2)
 
-        self.wait(1)
-        self.play(FadeOut(VGroup(title, state, state_label, action_probs, reinforce, summary)), run_time=0.8)
+        self.wait(1.4)
+        self.play(FadeOut(VGroup(title, state, state_label, action_probs, reinforce, summary)), run_time=1.1)
 
 class OutroScene(Scene):
     def construct(self):
@@ -419,5 +412,4 @@ class OutroScene(Scene):
         self.wait(1.5)
 
         self.play(FadeOut(VGroup(title, ref, thanks)), run_time=0.8)
-        self.wait(6.2)
-        self.wait(1.1)
+        self.wait(6)
