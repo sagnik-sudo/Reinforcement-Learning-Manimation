@@ -1,8 +1,18 @@
+"""
+Reinforcement Learning Animation Suite
+Created for: Machine Learning Bonus Assignment Submission
+Author: Sagnik Das
+Description: This module contains animations demonstrating core concepts of RL
+"""
+
 from manim import *
 
 
 class IntroRLScene(Scene):
+    """Introduction scene demonstrating basic RL concepts through a grid world example"""
+    
     def construct(self):
+        # Initialize title sequence
         title = Text("Reinforcement Learning: 101", font_size=60, color=YELLOW)
         self.play(Write(title), run_time=1.0)
         self.wait(0.5)
@@ -13,6 +23,7 @@ class IntroRLScene(Scene):
         self.wait(0.9)
         self.play(FadeOut(VGroup(title, presenter)), run_time=0.9)
 
+        # Create 3x3 grid environment
         grid = VGroup()
         for x in range(3):
             for y in range(3):
@@ -23,7 +34,8 @@ class IntroRLScene(Scene):
         grid.move_to(ORIGIN)
         self.play(Create(grid), run_time=1.2)
 
-        agent = Dot(color=RED).move_to(grid[6].get_center())
+        # Initialize agent and goal states
+        agent = Dot(color=RED).move_to(grid[6].get_center())  # Starting position
         goal_flag = (
             SVGMobject("flag.svg")
             .scale(0.2)
@@ -32,6 +44,7 @@ class IntroRLScene(Scene):
         )
         self.play(FadeIn(agent), FadeIn(goal_flag), run_time=0.9)
 
+        # Demonstrate wrong path with penalty
         wrong_path = [grid[6], grid[3]]
         for cell in wrong_path:
             self.play(agent.animate.move_to(cell.get_center()), run_time=0.26)
@@ -56,6 +69,7 @@ class IntroRLScene(Scene):
 
         self.play(agent.animate.move_to(grid[6].get_center()), run_time=0.26)
 
+        # Demonstrate correct path to goal
         correct_path = [grid[6], grid[7], grid[8], grid[5], grid[2]]
         for cell in correct_path:
             self.play(agent.animate.move_to(cell.get_center()), run_time=0.26)
@@ -76,19 +90,23 @@ class IntroRLScene(Scene):
 
 
 class MDPPolicyScene(Scene):
+    """Demonstrates Markov Decision Process and Policy concepts"""
+    
     def construct(self):
+        # Title for MDP section
         title = Text(
             "Markov Decision Process & Policy", font_size=50, color=YELLOW
         ).to_edge(UP)
         self.play(Write(title), run_time=1.0)
 
-        state = Circle(color=BLUE).shift(LEFT * 3)
+        # Create state transition diagram
+        state = Circle(color=BLUE).shift(LEFT * 3)  # Current state
         state_label = Text("State", font_size=30).next_to(state, DOWN)
 
-        next_state = Circle(color=GREEN).shift(RIGHT * 3)
+        next_state = Circle(color=GREEN).shift(RIGHT * 3)  # Next state
         next_state_label = Text("Next State", font_size=30).next_to(next_state, DOWN)
 
-        action = Arrow(state.get_right(), next_state.get_left(), buff=0.1)
+        action = Arrow(state.get_right(), next_state.get_left(), buff=0.1)  # Action
         action_label = Text("Action", font_size=30).next_to(action, UP)
 
         reward = Text("Reward", font_size=30, color=GOLD).next_to(next_state, UP)
@@ -98,6 +116,7 @@ class MDPPolicyScene(Scene):
         self.play(GrowArrow(action), Write(action_label), run_time=0.9)
         self.play(Write(reward), run_time=0.8)
 
+        # Policy box and definition
         policy_box = Rectangle(width=6, height=1.2, color=WHITE).shift(DOWN * 3)
         policy_text = Text("Policy: π(s) → a", font_size=34).move_to(
             policy_box.get_center()
@@ -136,6 +155,8 @@ class MDPPolicyScene(Scene):
 
 
 class DiscountedRewardsScene(Scene):
+    """Illustrates the concept of discounted rewards in RL"""
+    
     def construct(self):
         title = Text(
             "Discounted Rewards (γ = 0.8)", font_size=48, color=YELLOW
@@ -175,6 +196,8 @@ class DiscountedRewardsScene(Scene):
 
 
 class ValueGuidesScene(Scene):
+    """Shows how value functions guide the agent's decisions"""
+    
     def construct(self):
         title = Text("Value Leads the Way", font_size=50, color=YELLOW).to_edge(UP)
         self.play(Write(title), run_time=1.2)
@@ -232,6 +255,8 @@ class ValueGuidesScene(Scene):
 
 
 class TemporalDifferenceScene(Scene):
+    """Explains Temporal-Difference Learning with examples"""
+    
     def construct(self):
         title = Text(
             "Temporal-Difference Learning", font_size=48, color=YELLOW
@@ -287,6 +312,8 @@ class TemporalDifferenceScene(Scene):
 
 
 class SarsaVsQLearningScene(Scene):
+    """Compares Sarsa and Q-Learning algorithms"""
+    
     def construct(self):
         title = Text("Sarsa vs Q-Learning", font_size=48, color=YELLOW).to_edge(UP)
         self.play(Write(title), run_time=1.2)
@@ -382,6 +409,8 @@ class SarsaVsQLearningScene(Scene):
 
 
 class DeepQScene(Scene):
+    """Illustrates Deep Q-Learning with neural networks"""
+    
     def construct(self):
         title = Text("Deep Q-Learning", font_size=50, color=YELLOW).to_edge(UP)
         self.play(Write(title), run_time=1.2)
@@ -454,6 +483,8 @@ class DeepQScene(Scene):
 
 
 class PolicyGradientScene(Scene):
+    """Explains Policy Gradient Methods in RL"""
+    
     def construct(self):
         title = Text("Policy Gradient Methods", font_size=50, color=YELLOW).to_edge(UP)
         self.play(Write(title), run_time=1.2)
@@ -497,10 +528,14 @@ class PolicyGradientScene(Scene):
 
 
 class OutroScene(Scene):
+    """Concluding scene with academic references and acknowledgments"""
+    
     def construct(self):
+        # Display bibliography
         title = Text("References", font_size=46, color=YELLOW).to_edge(UP)
         self.play(Write(title), run_time=1)
 
+        # Academic references formatting
         references = (
             VGroup(
                 Tex(
