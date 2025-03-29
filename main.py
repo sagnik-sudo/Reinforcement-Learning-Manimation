@@ -214,7 +214,7 @@ class TemporalDifferenceScene(Scene):
         self.play(FadeIn(agent), run_time=0.5)
 
         # Step 1: S0 -> S1
-        reward1 = Text("r = +1", font_size=28, color=GOLD).next_to(tiles[1][0], UP, buff=0.3)
+        reward1 = Text("r = +1", font_size=28, color=GOLD).next_to(tiles[1][0], UP, buff=0.5)
         update_eq1 = MathTex(
             r"V(S_0) \leftarrow 0.5 + 0.1 \cdot [1 + 0.9 \cdot 0.6 - 0.5] = 0.59",
             font_size=28
@@ -225,7 +225,7 @@ class TemporalDifferenceScene(Scene):
         self.play(FadeOut(reward1), FadeOut(update_eq1), run_time=0.5)
 
         # Step 2: S1 -> S2
-        reward2 = Text("r = 0", font_size=28, color=GOLD).next_to(tiles[2][0], UP, buff=0.3)
+        reward2 = Text("r = 0", font_size=28, color=GOLD).next_to(tiles[2][0], UP, buff=0.5)
         update_eq2 = MathTex(
             r"V(S_1) \leftarrow 0.6 + 0.1 \cdot [0 + 0.9 \cdot 0.2 - 0.6] = 0.57",
             font_size=28
@@ -401,8 +401,13 @@ class OutroScene(Scene):
 
         # Reference text
         ref = Tex(
-            r"[1] Sutton, R.S. and Barto, A.G. (2018). "
-            r"\textit{Reinforcement Learning: An Introduction}. MIT Press.", font_size=32
+            r"\textbf{[1]} R. S. Sutton and A. G. Barto, \textit{Reinforcement Learning: An Introduction}, 2nd ed., MIT Press, 2018.\\"
+            r"\textbf{[2]} F. Walter, Machine Learning Basic Modules, UTN: Learning Units 8-1 to 8-3, 2024.\\"
+            r"\textbf{[3]} S. Russell and P. Norvig, \textit{Artificial Intelligence: A Modern Approach}, 4th ed., Pearson, 2021.\\"
+            r"\textbf{[4]} Microsoft Copilot, used to assist with code review and debugging, Accessed: Mar. 28, 2025.\\"
+            r"\textbf{[5]} Manim Community Developers, \textit{Manim – Mathematical Animation Engine}. [Online]. Available: https://www.manim.community\\"
+            r"\textbf{[6]} SVG assets from \textit{https://www.svgrepo.com}, Accessed: Mar. 2025.",
+            font_size=32
         ).scale(0.9).next_to(title, DOWN, buff=1)
         self.play(Write(ref), run_time=1.5)
 
