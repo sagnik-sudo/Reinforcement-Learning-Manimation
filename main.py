@@ -163,12 +163,120 @@ class ValueGuidesScene(Scene):
         for idx in path_indices:
             self.play(agent.animate.move_to(grid[idx][0].get_center()), run_time=0.6)
 
-        # Bellman Equation
         bellman_eq = MathTex(
-            r"v_\pi(s) = \sum_a \pi(a|s) \sum_{s',r} p(s',r|s,a)[r + \gamma v_\pi(s')]",
+            r"V^*(s) = \max_{a \epsilon A} \sum_{s' \epsilon S} T(s, a, s') \left[ R(s, a, s') + \gamma V^*(s') \right]",
             font_size=34
         ).next_to(grid, DOWN, buff=1)
         self.play(Write(bellman_eq))
         self.wait(2)
         elements = VGroup(title, *grid, agent, bellman_eq)
         self.play(FadeOut(elements))
+
+class TemporalDifferenceScene(Scene):
+    def construct(self):
+        # Title
+        title = Text("Temporal-Difference Learning", font_size=48, color=YELLOW).to_edge(UP)
+        self.play(Write(title), run_time=0.8)
+
+        # Setup tiles
+        tiles = VGroup()
+        values = [0.5, 0.6, 0.2, 0.0]
+        for i, v in enumerate(values):
+            tile = Square(side_length=1.2, color=BLUE).move_to(RIGHT * (i - 1.5) * 2)
+            label = Text(f"S{i}", font_size=24).next_to(tile, UP, buff=0.1)
+            value = Text(f"V={v}", font_size=24).next_to(tile, DOWN, buff=0.1)
+            tiles.add(VGroup(tile, label, value))
+
+        tiles.move_to(ORIGIN)
+        self.play(Create(tiles), run_time=1)
+
+        # Agent dot
+        agent = Dot(color=RED).scale(1.2).move_to(tiles[0][0].get_center())
+        self.play(FadeIn(agent), run_time=0.3)
+
+        # Step 1: S0 -> S1
+        reward1 = Text("r = +1", font_size=28, color=GOLD).next_to(tiles[1][0], UP, buff=0.3)
+        update_eq1 = MathTex(
+            r"V(S_0) \leftarrow 0.5 + 0.1 \cdot [1 + 0.9 \cdot 0.6 - 0.5] = 0.59",
+            font_size=28
+        ).to_edge(DOWN)
+        self.play(agent.animate.move_to(tiles[1][0].get_center()), run_time=0.5)
+        self.play(Write(reward1), Write(update_eq1), run_time=0.8)
+        self.wait(0.2)
+        self.play(FadeOut(reward1), FadeOut(update_eq1), run_time=0.3)
+
+        # Step 2: S1 -> S2
+        reward2 = Text("r = 0", font_size=28, color=GOLD).next_to(tiles[2][0], UP, buff=0.3)
+        update_eq2 = MathTex(
+            r"V(S_1) \leftarrow 0.6 + 0.1 \cdot [0 + 0.9 \cdot 0.2 - 0.6] = 0.57",
+            font_size=28
+        ).to_edge(DOWN)
+        self.play(agent.animate.move_to(tiles[2][0].get_center()), run_time=0.5)
+        self.play(Write(reward2), Write(update_eq2), run_time=0.8)
+        self.wait(0.2)
+        self.play(FadeOut(reward2), FadeOut(update_eq2), run_time=0.3)
+
+        # Summary
+        summary = Text("TD(0): Update after every step using next state's value",
+                       font_size=30, color=BLUE).next_to(tiles, DOWN, buff=0.8)
+        self.play(Write(summary), run_time=0.8)
+        self.wait(1)
+        self.play(FadeOut(VGroup(title, tiles, agent, summary)), run_time=0.5)
+
+class SarsaVsQLearningScene(Scene):
+    def construct(self):
+        title = Text("Sarsa vs Q-Learning", font_size=48, color=YELLOW).to_edge(UP)
+        self.play(Write(title), run_time=1)
+
+        # Define two side-by-side mini-grids
+        sarsa_grid = VGroup()
+        q_grid = VGroup()
+        for i in range(3):
+            s_tile = Square(side_length=1).move_to(LEFT*4 + RIGHT*i*1.2)
+            q_tile = Square(side_length=1).move_to(RIGHT*1 + RIGHT*i*1.2)
+            sarsa_grid.add(s_tile)
+            q_grid.add(q_tile)
+
+        self.play(Create(sarsa_grid), Create(q_grid), run_time=1)
+
+        # Add labels
+        sarsa_label = Text("Sarsa (On-policy)", font_size=28, color=BLUE).next_to(sarsa_grid, UP)
+        q_label = Text("Q-Learning (Off-policy)", font_size=28, color=RED).next_to(q_grid, UP)
+        self.play(Write(sarsa_label), Write(q_label))
+
+        # Add agents
+        agent_s = Dot(color=BLUE).scale(1.2).move_to(sarsa_grid[0].get_center())
+        agent_q = Dot(color=RED).scale(1.2).move_to(q_grid[0].get_center())
+        self.play(FadeIn(agent_s), FadeIn(agent_q))
+
+        # Sarsa path (actual behavior)
+        self.play(agent_s.animate.move_to(sarsa_grid[1].get_center()), run_time=0.5)
+        update_s = MathTex(
+            r"Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma Q(s',a') - Q(s,a)]",
+            color=BLUE
+        ).scale(0.7).next_to(sarsa_grid, DOWN, buff=0.3)
+        update_s.align_to(sarsa_grid, LEFT)
+
+        # Q-Learning path (greedy lookahead)
+        self.play(agent_q.animate.move_to(q_grid[1].get_center()), run_time=0.5)
+        update_q = MathTex(
+            r"Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma \max_{a'} Q(s',a') - Q(s,a)]",
+            color=RED
+        ).scale(0.7).next_to(q_grid, DOWN, buff=0.3)
+        update_q.align_to(q_grid, RIGHT)
+
+        eq_group = VGroup(update_s, update_q).arrange(DOWN, buff=0.3).move_to(DOWN * 2.5)
+
+        self.play(Write(eq_group))
+        self.wait(1.5)
+
+        # Final summary
+        summary = Text("Sarsa: Learns from experience  |  Q-Learning: Learns from imagined optimal future",
+                       font_size=28, color=WHITE).to_edge(DOWN)
+        self.play(Write(summary), run_time=1)
+
+        self.wait(2)
+        self.play(FadeOut(VGroup(
+            title, sarsa_grid, q_grid, agent_s, agent_q,
+            update_s, update_q, sarsa_label, q_label, summary
+        )), run_time=1)
