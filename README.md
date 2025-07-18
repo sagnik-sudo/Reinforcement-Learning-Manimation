@@ -1,10 +1,12 @@
-# Reinforcement Learning Manimation
+# Educational Manimations Collection
 
-This repository contains manimation code for a Reinforcement Learning video. The animations illustrate key concepts in reinforcement learning, including Markov Decision Processes (MDPs), Bellman equations, policy evaluation, policy improvement, and dynamic programming.
+This repository contains manimation code for various educational projects. The animations illustrate key concepts across different computer science and machine learning topics through visual demonstrations.
 
 ## Repository Structure
 
-- `/rl_animation.py`: The main Python script containing the manim animation code for the video.
+- `rl_manim.py`: Reinforcement Learning animations covering MDPs, Bellman equations, Q-learning, SARSA, Deep Q-Networks, Policy Gradients, and more
+- `robin_hood_array.py`: Robin Hood Hashing animations demonstrating insertion and deletion processes in hash tables
+- `media/`: Output directory containing rendered video files
 
 ## Requirements
 
@@ -36,18 +38,37 @@ This repository contains manimation code for a Reinforcement Learning video. The
     pip install manim numpy
     ```
 
-## How to Run the Animation
+## How to Run the Animations
 
-Use the manim command to render the animation. For example:
+Use the manim command to render the animations. Here are some examples:
+
+### Reinforcement Learning Animations
 
 ```bash
-manim -pql rl_animation.py FullRLAnimation
+# Render all RL scenes in sequence
+manim -pql rl_manim.py IntroRLScene
+manim -pql rl_manim.py MDPPolicyScene
+manim -pql rl_manim.py DiscountedRewardsScene
+# ... and so on for other scenes
+
+# Or render a specific scene
+manim -pql rl_manim.py DeepQScene
 ```
 
-This command will render the `FullRLAnimation` scene in low quality and preview it once rendering is complete. To change the quality, adjust the `-pql` flag (e.g., `-pqh` for high quality).
+### Robin Hood Hashing Animations
+
+```bash
+# Render insertion process
+manim -pql robin_hood_array.py RobinHoodInsertion
+
+# Render deletion process
+manim -pql robin_hood_array.py RobinHoodDeletion
+```
+
+The `-pql` flag renders in low quality with preview. For higher quality, use `-pqh` for high quality or `-pqk` for 4K quality.
 
 ## Customization
 
-Feel free to modify the animation code in `rl_animation.py` to explore different aspects of reinforcement learning and dynamic programming.
+Feel free to modify the animation code in `rl_manim.py` and `robin_hood_array.py` to explore different aspects of these computer science concepts or add your own educational animations.
 
 Happy animating!
